@@ -85,10 +85,15 @@ if __name__ == '__main__':
     last_print_t = time.time()
     t_buffer = []
 
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    out = cv2.VideoWriter('output.avi',fourcc, 20.0, (1280,720))
+
     # process frames
     while rval:
         # get new frame
         rval, cv_image = cap.read()
+        out.write(cv_image)
+
         # handle Ctrl-C
         key = cv2.waitKey(20)
         if rospy.is_shutdown() or key == 27 or key == 1048603:
@@ -115,6 +120,7 @@ if __name__ == '__main__':
             last_print_t = cur_t
         last_t = cur_t
 
+    out.release()
     # stop thread
     if async_info_publisher:
         is_shutdown = True
